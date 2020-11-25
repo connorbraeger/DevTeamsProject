@@ -14,10 +14,11 @@ namespace DevTeamsProject
         public bool HasAccessToPluralsight { get; set; }
         
         public Developer() { }
-        public Developer(string lastName, string firstName, bool hasAccess)
+        public Developer(string lastName, string firstName,int idNumber, bool hasAccess)
         {
             LastName = lastName;
             FirstName = firstName;
+            IDNumber = idNumber;
             HasAccessToPluralsight = hasAccess;
         }
     }

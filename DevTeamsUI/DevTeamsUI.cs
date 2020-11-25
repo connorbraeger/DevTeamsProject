@@ -24,7 +24,7 @@ namespace DevTeamsUI
                     "1. Add New Developer\n" +
                     "2. View All Developers\n" +
                     "3. View Developer By ID number\n" +
-                    "4. Determine if Developer has access to Pluralsight" +
+                    "4. Determine if Developer has access to Pluralsight\n" +
                     "5. Update Existing Developer\n" +
                     "6. Delete Existing Developer\n" +
                     "7. Exit");
@@ -136,7 +136,7 @@ namespace DevTeamsUI
                 {
                     if (dev.HasAccessToPluralsight)
                     {
-                        Console.WriteLine("Developer does has access");
+                        Console.WriteLine("Developer does have access");
                         keepRunning = false;
                     }
                     else
@@ -170,6 +170,74 @@ namespace DevTeamsUI
 
                 }
             }
+        }
+        private void UpdateExistingDeveloper()
+        {
+            Console.Clear();
+            Console.WriteLine("Please enter employee ID number from list:");
+            DisplayAllDevelopers();
+            int id = int.Parse(Console.ReadLine());
+            Developer newDev = new Developer();
+            Console.WriteLine("Please enter Last Name of Developer");
+            newDev.LastName = Console.ReadLine();
+            Console.WriteLine("Please enter First Name of Developer");
+            newDev.FirstName = Console.ReadLine();
+            Console.WriteLine("Does Developer have PluralSight access? (y/n)");
+            bool isValidInput = false;
+            while (!isValidInput)
+            {
+                string access = Console.ReadLine().ToLower();
+                if (access == "y")
+                {
+                    newDev.HasAccessToPluralsight = true;
+                    isValidInput = true;
+                }
+                else if (access == "n")
+                {
+                    newDev.HasAccessToPluralsight = false;
+                    isValidInput = true;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a valid input");
+                }
+            }
+            bool wasUpdated = _devRepo.UpdateExistingDirectory(id, newDev);
+            if (wasUpdated)
+            {
+                Console.WriteLine("Developer information updated.");
+            }
+            else
+            {
+                Console.WriteLine("Developer information could not be updated");
+            }
+        }
+        private void DeleteExistingDeveloper()
+        {
+            Console.Clear();
+            DisplayAllDevelopers();
+            Console.WriteLine("Enter in ID number of Developer to be removed");
+            int id  = int.Parse(Console.ReadLine());
+            bool wasDeleted = _devRepo.RemoveDeveloperFromDirectory(id);
+            if (wasDeleted)
+            {
+                Console.WriteLine("The developer was removed from the list");
+            }
+            else
+            {
+                Console.WriteLine("The Developer could not be deleted");
+            }
+            
+        }
+        private void SeedDevDirectory()
+        {
+            Developer dev1 = new Developer("Braeger", "Connor", 1, true);
+            Developer dev2 = new Developer("Wadman", "Amanda", 2, false);
+            Developer dev3 = new Developer("Strife", "Cloud", 3, true);
+            _devRepo.AddDeveloperToDirectory(dev1);
+            _devRepo.AddDeveloperToDirectory(dev2);
+            _devRepo.AddDeveloperToDirectory(dev3);
+
         }
     }
 }
