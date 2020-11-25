@@ -8,6 +8,7 @@ namespace DevTeamsProject
 {
     public class DevTeam
     {
-
+        public string TeamName { get; set; }
+        public List<Developer> CurrentDevs { get; set; }
     }
 }

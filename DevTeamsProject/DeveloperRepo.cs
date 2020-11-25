@@ -69,7 +69,7 @@ namespace DevTeamsProject
             }
         }
         //Developer Helper (Get Developer by ID)
-        private Developer GetDeveloperById(int id)
+        public Developer GetDeveloperById(int id)
         {
             foreach (Developer item in _developerDirectory)
             {
@@ -81,7 +81,7 @@ namespace DevTeamsProject
             }
             return null;
         }
-        private bool IsInDirectory(Developer developer)
+        public bool IsInDirectory(Developer developer)
         {
             bool isMatch = false;
             foreach (Developer item in _developerDirectory)
