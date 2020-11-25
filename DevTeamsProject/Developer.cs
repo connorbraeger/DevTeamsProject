@@ -12,7 +12,7 @@ namespace DevTeamsProject
         public string FirstName { get; set; }
         public int IDNumber { get; set; }
         public bool HasAccessToPluralsight { get; set; }
-        
+        public bool IsAssigned { get; set; }
         public Developer() { }
         public Developer(string lastName, string firstName,int idNumber, bool hasAccess)
         {
@@ -20,6 +20,12 @@ namespace DevTeamsProject
             FirstName = firstName;
             IDNumber = idNumber;
             HasAccessToPluralsight = hasAccess;
+            IsAssigned = false;
+        }
+        public override string ToString()
+        {
+            string devString = $"Name: {FirstName} {LastName}; ID Number = {IDNumber}";
+            return devString;
         }
     }
 }

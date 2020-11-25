@@ -10,12 +10,45 @@ namespace DevTeamsUI
     class DevTeamsUI
     {
         private DeveloperRepo _devRepo = new DeveloperRepo();
+        private DevTeamRepo _devTeamRepo = new DevTeamRepo();
         public void Run()
         {
             SeedDevDirectory();
-            Menu();
+            MainMenu();
         }
-        public void Menu()
+        public void MainMenu()
+        {
+            bool keepRunning = true;
+            while (keepRunning)
+            {
+                Console.WriteLine("Select a menu option:\n" +
+                    "1. Enter Individual Developer Menu \n" +
+                    "2. Enter Developer Team Mamangement Menu \n" +
+                    "3. Exit Program\n");
+                    
+                string input = Console.ReadLine();
+                switch (input)
+                {
+                    case "1":
+                        DeveloperMenu();
+                        break;
+                    case "2":
+                        DeveloperTeamsMenu();
+                        break;
+                    case "3":
+                        Console.WriteLine("Goodbye!");
+                        keepRunning = false;
+                        break;
+                    default:
+                        Console.WriteLine("Please Enter a valid number.");
+                        break;
+                }
+                Console.WriteLine("Please press any key to continue...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+        private void DeveloperMenu()
         {
             bool keepRunning = true;
             while (keepRunning)
@@ -51,6 +84,50 @@ namespace DevTeamsUI
                         DeleteExistingDeveloper();
                         break;
                     case "7":
+                        Console.WriteLine("Goodbye!");
+                        keepRunning = false;
+                        break;
+                    default:
+                        Console.WriteLine("Please Enter a valid number.");
+                        break;
+                }
+                Console.WriteLine("Please press any key to continue...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+        private void DeveloperTeamsMenu()
+        {
+            bool keepRunning = true;
+            while (keepRunning)
+            {
+                Console.WriteLine("Select a menu option:\n" +
+                    "1. Add New Developer Team\n" +
+                    "2. View All Developer Teams\n" +
+                    "3. Add Developer to Team\n" +
+                    "4. Remove Developer from Team\n" +
+                    "5. Delete Developer from Team" +
+                    "6. Exit");
+                string input = Console.ReadLine();
+                //Evaluate the user's input and act accordingly
+                switch (input)
+                {
+                    case "1":
+                        CreateNewDeveloperTeam();
+                        break;
+                    case "2":
+                        DisplayAllDeveloperTeams();
+                        break;
+                    case "3":
+                        AddDeveloperToTeam();
+                        break;
+                    case "4":
+                        RemoveDeveloperFromTeam();
+                        break;
+                    case "5":
+                        DeleteDeveloperTeam();
+                        break;
+                    case "6":
                         Console.WriteLine("Goodbye!");
                         keepRunning = false;
                         break;
@@ -239,5 +316,118 @@ namespace DevTeamsUI
             _devRepo.AddDeveloperToDirectory(dev3);
 
         }
+        private void CreateNewDeveloperTeam()
+        {
+            Console.Clear();
+            bool validNewName = false;
+            Console.WriteLine("Please enter a valid team name:");
+            string name = Console.ReadLine();
+            while (!validNewName)
+            {
+                if (_devTeamRepo.IsNameTaken(name))
+                {
+                    Console.WriteLine("Name is already taken.");
+
+                }
+                else
+                {
+                    DevTeam newDevTeam = new DevTeam{ TeamName= name};
+                    _devTeamRepo.AddDevTeam(newDevTeam);
+                    Console.WriteLine("New Team created. Would you like to add members to team now? (y/n)");
+                    validNewName = true;
+                    bool isValidInput = false;
+                    while (!isValidInput)
+                    {
+                        string access = Console.ReadLine().ToLower();
+                        if (access == "y")
+                        {
+                            AddDeveloperToTeam();
+                            isValidInput = true;
+
+                        }
+                        else if (access == "n")
+                        {
+                            isValidInput = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter a valid input");
+                        }
+                    }
+                    
+                }
+            }
+        }
+        public void DisplayUnassignedDevelopers()
+        {
+            List<Developer> unassignedDevelopers = _devRepo.GetListofUnassignedDevelopers();
+            if (unassignedDevelopers == null)
+            {
+                Console.WriteLine("All Developers are currently assigned.");
+            }
+            else
+            {
+                foreach (Developer dev in unassignedDevelopers)
+                {
+                    Console.WriteLine(dev.ToString() + "\n");
+                }
+            }
+        }
+        public void DisplayAllDeveloperTeams()
+        {
+            Console.Clear();
+            List<DevTeam> devTeams = _devTeamRepo.GetDevTeamList();
+            foreach (DevTeam devTeam in devTeams)
+            {
+                Console.WriteLine($"Dev Team: {devTeam.TeamName}");
+            }
+        }
+        public void AddDeveloperToTeam()
+        {
+            Console.Clear();
+            bool validTeamName = false;
+            while (!validTeamName)
+            {
+                DisplayAllDeveloperTeams();
+                Console.WriteLine("Please enter name of team");
+                string teamName = Console.ReadLine().ToLower();
+                DevTeam newDevTeam = _devTeamRepo.GetDevTeamById(teamName);
+                if (newDevTeam != null)
+                {
+                    validTeamName = true;
+                    bool validIdNumber = false;
+                    while (!validIdNumber) {
+                        Console.WriteLine("Please enter the ID number of an unassigned Team member");
+                        int idNumber;
+                        bool isNumber = int.TryParse(Console.ReadLine(), out idNumber);
+                        if (isNumber)
+                        {
+                            Developer newDev = _devRepo.GetDeveloperById(idNumber);
+                            if (newDev == null)
+                            {
+                                Console.WriteLine("Id invalid");
+                            }
+                            else if (newDev.IsAssigned)
+                            {
+                                Console.WriteLine("Developer is already assigned to a team");//need to add option to switch developer to different team...
+                            }
+                            else
+                            {
+                                newDev.IsAssigned = true;
+                                _devRepo.UpdateExistingDirectory(idNumber, newDev);
+                                newDevTeam.CurrentDevs.Add(newDev);
+                                _devTeamRepo.UpdateDevTeamList(teamName, newDevTeam);
+                                validIdNumber = true;
+                            }
+                        }
+                } 
+                }
+            }
+        }
+        public void RemoveDeveloperFromTeam()
+        {
+
+        }
+        public void DeleteDeveloperTeam() { }
     }
 }

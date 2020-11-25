@@ -93,5 +93,26 @@ namespace DevTeamsProject
             }
             return isMatch;
         }
+        public List<Developer> GetListofUnassignedDevelopers()
+        {
+            List<Developer> unassignedDevs = new List<Developer>();
+
+            foreach(Developer dev in _developerDirectory)
+            {
+                if (!dev.IsAssigned)
+                {
+                    unassignedDevs.Add(dev);
+                }
+            }
+            if (unassignedDevs.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return unassignedDevs;
+            }
+        }
+        
     }
 }
