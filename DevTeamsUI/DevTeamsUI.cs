@@ -628,10 +628,14 @@ namespace DevTeamsUI
                         if (isNumber)
                         {
                             Developer newDev = new Developer();
-                            newDev.SetEqual(_devRepo.GetDeveloperById(idNumber));
+                            bool wasNewDevAssigned = newDev.SetEqual(newDevTeam.DevsInTeam.GetDeveloperById(idNumber));
                             if (newDev == null)
                             {
                                 Console.WriteLine("Id invalid");
+                            }
+                            else if (!wasNewDevAssigned){
+                                Console.WriteLine("This team member is not in the team");
+                                Console.ReadKey();
                             }
                             else if (!newDev.IsAssigned)
                             {
@@ -651,6 +655,7 @@ namespace DevTeamsUI
                 else
                 {
                     Console.WriteLine("Please enter name of an existing team");
+                    Console.ReadKey();
                 }
             }
         }
@@ -677,11 +682,14 @@ namespace DevTeamsUI
                     else
                     {
                         Console.WriteLine("Unable to delete developer team.");
+                        Console.ReadKey();
                     }
                 }
                 else
                 {
                     Console.WriteLine("Invalid Input");
+                    Console.ReadKey();
+
                 }
             }
         }
