@@ -13,7 +13,7 @@ namespace DevTeamsProject
         //DevTeam Create
         public bool AddDevTeam(DevTeam devTeam)
         {
-            if (GetDevTeamById(devTeam.TeamName) == null)
+            if (IsNameTaken(devTeam.TeamName))
             {
                 return false;
             }
@@ -37,8 +37,7 @@ namespace DevTeamsProject
             DevTeam oldTeam = GetDevTeamById(id);
             if(oldTeam != null)
             {
-                oldTeam.CurrentDevs = team.CurrentDevs;
-                oldTeam.TeamName = team.TeamName;
+                oldTeam.SetEqual(team);
                 return true;
             }
             else
@@ -56,8 +55,17 @@ namespace DevTeamsProject
             }
             else
             {
+                
+              
+                team.DevsInTeam.UnAssignAllDevs();
                 int count = _devTeams.Count();
-                _devTeams.Remove(team);
+                foreach (DevTeam devTeam in _devTeams)
+                {
+                    if( devTeam.TeamName == team.TeamName){
+                        _devTeams.Remove(devTeam);
+                        break;
+                    }
+                }
                 if(count > _devTeams.Count())
                 {
                     return true;

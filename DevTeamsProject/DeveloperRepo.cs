@@ -39,6 +39,7 @@ namespace DevTeamsProject
                 oldInfo.LastName = developer.LastName;
                 oldInfo.HasAccessToPluralsight = developer.HasAccessToPluralsight;
                 oldInfo.IDNumber = developer.IDNumber;
+                oldInfo.IsAssigned = developer.IsAssigned;
                 return true;
             }
             else
@@ -113,6 +114,30 @@ namespace DevTeamsProject
                 return unassignedDevs;
             }
         }
-        
+        public void SetEqual(DeveloperRepo devRepo)
+        {
+            _developerDirectory.Clear();
+            foreach (Developer dev in devRepo.GetDeveloperDirectory())
+            {
+                AddDeveloperToDirectory(dev);
+            }
+        }
+        public void UnAssignAllDevs()
+        {
+            foreach (Developer dev in _developerDirectory)
+            {
+                dev.IsAssigned = false;
+            }
+        }
+        public override string ToString()
+        {
+            string devRepoString="";
+            foreach(Developer dev in _developerDirectory)
+            {
+                devRepoString = devRepoString + $"{dev.FirstName} {dev.LastName} ID Number:{dev.IDNumber}\n";
+
+            }
+            return devRepoString;
+        }
     }
 }

@@ -27,5 +27,13 @@ namespace DevTeamsProject
             string devString = $"Name: {FirstName} {LastName}; ID Number = {IDNumber}";
             return devString;
         }
+        public void SetEqual(Developer dev)
+        {
+            LastName = dev.LastName;
+            FirstName = dev.FirstName;
+            IDNumber = dev.IDNumber;
+            HasAccessToPluralsight = dev.HasAccessToPluralsight;
+            IsAssigned = dev.IsAssigned;
+        }
     }
 }
