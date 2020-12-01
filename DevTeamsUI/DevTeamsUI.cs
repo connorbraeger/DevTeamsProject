@@ -569,7 +569,7 @@ namespace DevTeamsUI
                             }
                             else if (newDev.IsAssigned||hasBeenReassigned)
                             {
-                                Console.WriteLine("Developer is already assigned to a team. Would you like to switch " + newDev.FirstName + " " + newDev.LastName + " to a new team? (y/n)");//need to add option to switch developer to different team...
+                                Console.WriteLine("Developer is already assigned to a team. Would you like to switch " + newDev.FirstName + " " + newDev.LastName + " to a new team? (y/n)");
                                 bool isValidInput = false;
                                 while (!isValidInput)
                                 {
@@ -632,14 +632,11 @@ namespace DevTeamsUI
                             if (newDev == null)
                             {
                                 Console.WriteLine("Id invalid");
+                                Console.ReadKey();
                             }
                             else if (!wasNewDevAssigned){
                                 Console.WriteLine("This team member is not in the team");
                                 Console.ReadKey();
-                            }
-                            else if (!newDev.IsAssigned)
-                            {
-                                Console.WriteLine("Developer is not assigned to a team");//need to add option to switch developer to different team...
                             }
                             else
                             {
@@ -697,9 +694,25 @@ namespace DevTeamsUI
         {
             Console.Clear();
             dev.IsAssigned = false;
+            string previousTeam ="";
+            List<DevTeam> devTeamlist = _devTeamRepo.GetDevTeamList();
+            
+            foreach(DevTeam devTeam1 in devTeamlist)
+            {
+                List<Developer> devList = devTeam1.DevsInTeam.GetDeveloperDirectory();
+                 foreach (Developer dev1 in devList)
+                {
+                    if (dev1.IDNumber == dev.IDNumber)
+                    {
+                        previousTeam = devTeam1.TeamName;
+                        devTeam.SetEqual(devTeam1);
+                    }
+                }
+                
+            }
             _devRepo.UpdateExistingDirectory(dev.IDNumber, dev);
             devTeam.DevsInTeam.RemoveDeveloperFromDirectory(dev.IDNumber);
-            _devTeamRepo.UpdateDevTeamList(devTeam.TeamName, devTeam);
+            _devTeamRepo.UpdateDevTeamList(previousTeam, devTeam);
             DisplayAllDeveloperTeams();
             DisplayUnassignedDevelopers();//test
             Console.WriteLine($"Which team would you like add {dev.FirstName} {dev.LastName} to?");
@@ -712,6 +725,7 @@ namespace DevTeamsUI
                 if (nowEqual)
                 {
                     validTeamName = true;
+                    dev.IsAssigned = true;
                     newDevTeam.DevsInTeam.AddDeveloperToDirectory(dev);
                     _devTeamRepo.UpdateDevTeamList(teamName, newDevTeam);
                     Console.WriteLine($"{dev.FirstName} {dev.LastName} added to {newDevTeam.TeamName}");
